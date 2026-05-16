@@ -2,54 +2,98 @@
 <html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>ADAM Logistics</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 700px;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 28px;
-            margin-bottom: 10px;
-            color: #111;
-        }
-
-        p {
-            color: #555;
-            font-size: 18px;
-        }
-
-        .email {
-            margin-top: 20px;
-            font-weight: bold;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ADAM Logistics bietet Eventlogistik, Geschirrverleih und professionelle Abläufe in München und Umgebung.">
+    <title>ADAM Logistics | Event Logistics & Tableware Rental</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container">
-        <img src="ADAM.jpeg" alt="ADAM Logistics Logo">
+    <header class="site-header">
+        <div class="header-inner">
+            <a class="logo-link" href="index.html" aria-label="ADAM Logistics Startseite">
+                <img class="site-logo" src="assets/ADAM_logo_black.png" alt="ADAM Logistics Logo" data-fallback="ADAM Logistics">
+                <span class="logo-fallback" aria-hidden="true">ADAM Logistics</span>
+            </a>
 
-        <h1>Website in progress</h1>
-        <p>Event logistics & rental solutions coming soon.</p>
+            <nav class="main-nav" aria-label="Hauptnavigation">
+                <a class="nav-link active" href="index.html" aria-current="page">Startseite</a>
+                <a class="nav-link" href="logistik.html">Logistik</a>
+                <a class="nav-link" href="verleih.html">Verleih</a>
+                <a class="nav-link" href="wie-funktioniert.html">Wie funktioniert</a>
+                <a class="nav-link" href="ueber-uns.html">Über uns</a>
+                <a class="nav-link" href="partner.html">Partner</a>
+                <a class="nav-link" href="kontakt.html">Kontakt</a>
+            </nav>
+        </div>
+    </header>
 
-        <p class="email">info@adam-logistics.de</p>
-    </div>
+    <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-content">
+                <p class="eyebrow">EVENT LOGISTICS &amp; TABLEWARE RENTAL</p>
+                <h1 id="hero-title">SIMPLE.<br>CLEAN.<br>RELIABLE.</h1>
+                <p class="hero-copy">
+                    Ihr Partner für Eventlogistik, Geschirrverleih<br>
+                    und professionelle Abläufe in München und Umgebung.
+                </p>
+                <div class="hero-actions" aria-label="Leistungen">
+                    <a class="btn btn-primary" href="logistik.html">LOGISTIK</a>
+                    <a class="btn btn-primary" href="verleih.html">VERLEIH</a>
+                </div>
+            </div>
+
+            <div class="hero-visual" aria-label="ADAM Logistics Transporter">
+                <img class="van-image" src="assets/Hero_Van_BG_Munich.png" alt="Weißer Renault Master Transporter mit München-Hintergrund">
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <img class="footer-logo" src="assets/ADAM_logo_white_NN.png" alt="ADAM Logistics Logo" data-fallback="ADAM Logistics">
+                <h2>ADAM Logistics</h2>
+                <p>Eventlogistik, Geschirrverleih und professionelle Abläufe für München und Umgebung.</p>
+            </div>
+
+            <div class="footer-column">
+                <h2>Kontakt</h2>
+                <address>
+                    <span>Anthony Dimitrov</span>
+                    <a href="tel:+491590132248">+49 159 0132248</a>
+                    <span>Alexander Maneva</span>
+                    <a href="tel:+4917680100156">+49 176 80100156</a>
+                    <a href="mailto:info@adam-logistics.de">info@adam-logistics.de</a>
+                    <span>München, Deutschland</span>
+                    <span>Instagram</span>
+                    <a href="https://www.instagram.com/adamlogisticsgbr/" target="_blank" rel="noopener noreferrer">@adamlogisticsgbr</a>
+                </address>
+            </div>
+
+            <div class="footer-column">
+                <h2>Links</h2>
+                <nav aria-label="Footer Navigation">
+                    <a href="index.html">Startseite</a>
+                    <a href="logistik.html">Logistik</a>
+                    <a href="verleih.html">Verleih</a>
+                    <a href="wie-funktioniert.html">Wie funktioniert</a>
+                    <a href="ueber-uns.html">Über uns</a>
+                    <a href="partner.html">Partner</a>
+                    <a href="kontakt.html">Kontakt</a>
+                </nav>
+            </div>
+
+            <div class="footer-column">
+                <h2>Rechtliches</h2>
+                <nav aria-label="Rechtliche Links">
+                    <a href="impressum.html">Impressum</a>
+                    <a href="datenschutz.html">Datenschutz</a>
+                </nav>
+            </div>
+        </div>
+        <p class="copyright">© 2026 ADAM Logistics. Alle Rechte vorbehalten.</p>
+    </footer>
+
+    <script src="js/main.js"></script>
 </body>
 </html>
