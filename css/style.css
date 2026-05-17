@@ -349,7 +349,7 @@ a {
     letter-spacing: 0;
 }
 
-.page-hero-inner > p:last-of-type {
+.page-hero-inner > p:not(.eyebrow):not(.hero-coming-soon):not(.page-hero-small) {
     max-width: 620px;
     margin: 30px 0 0;
     color: #2d2d2d;
@@ -368,6 +368,14 @@ a {
 
 .page-hero-actions {
     margin-top: 30px;
+}
+
+.page-hero-small {
+    max-width: 620px;
+    margin-top: 18px;
+    color: var(--color-muted);
+    font-size: 17px;
+    line-height: 1.55;
 }
 
 .content-section {
@@ -471,6 +479,44 @@ a {
     margin: 30px 0 0;
     color: #7a7a7a;
     font-size: 14px;
+    line-height: 1.55;
+}
+
+.about-separated {
+    border-top: 1px solid var(--color-border);
+}
+
+.about-section-inner {
+    padding-top: 88px;
+    padding-bottom: 88px;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    max-width: 760px;
+    margin-top: 44px;
+}
+
+.profile-card {
+    border: 1px solid var(--color-border);
+    padding: 28px;
+    background: var(--color-white);
+}
+
+.profile-card h3 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.profile-card p {
+    margin: 14px 0 0;
+    color: var(--color-muted);
+    font-size: 16px;
     line-height: 1.55;
 }
 
@@ -667,7 +713,7 @@ a {
         font-size: clamp(36px, 11vw, 52px);
     }
 
-    .page-hero p:last-child {
+    .page-hero-inner > p:not(.eyebrow):not(.hero-coming-soon):not(.page-hero-small) {
         font-size: 19px;
     }
 
@@ -676,14 +722,25 @@ a {
         padding: 54px 0;
     }
 
+    .about-section-inner {
+        padding-top: 54px;
+        padding-bottom: 54px;
+    }
+
     .steps-grid,
     .feature-grid {
         grid-template-columns: 1fr;
         margin-top: 32px;
     }
 
+    .profile-grid {
+        grid-template-columns: 1fr;
+        margin-top: 32px;
+    }
+
     .step-card,
-    .feature-card {
+    .feature-card,
+    .profile-card {
         padding: 24px;
     }
 }
