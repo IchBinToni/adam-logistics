@@ -349,12 +349,25 @@ a {
     letter-spacing: 0;
 }
 
-.page-hero p:last-child {
+.page-hero-inner > p:last-of-type {
     max-width: 620px;
     margin: 30px 0 0;
     color: #2d2d2d;
     font-size: 24px;
     line-height: 1.42;
+}
+
+.hero-coming-soon {
+    margin: 18px 0 0;
+    color: var(--color-red);
+    font-size: clamp(22px, 2.2vw, 34px);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: 0;
+}
+
+.page-hero-actions {
+    margin-top: 30px;
 }
 
 .content-section {
