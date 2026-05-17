@@ -13,3 +13,40 @@ document.querySelectorAll("img[data-fallback]").forEach((image) => {
 
     image.addEventListener("error", markMissing);
 });
+
+document.querySelectorAll(".nav-toggle").forEach((toggle) => {
+    const header = toggle.closest(".site-header");
+    const navigation = header ? header.querySelector(".main-nav") : null;
+
+    if (!navigation) {
+        return;
+    }
+
+    const closeNavigation = () => {
+        navigation.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        toggle.setAttribute("aria-label", "Navigation öffnen");
+    };
+
+    toggle.addEventListener("click", () => {
+        const isOpen = navigation.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", String(isOpen));
+        toggle.setAttribute("aria-label", isOpen ? "Navigation schließen" : "Navigation öffnen");
+    });
+
+    navigation.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", closeNavigation);
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeNavigation();
+        }
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+            closeNavigation();
+        }
+    });
+});
