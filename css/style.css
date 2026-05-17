@@ -328,6 +328,166 @@ a {
     font-size: 14px;
 }
 
+.page-hero {
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.page-hero-inner {
+    width: min(100% - 64px, var(--content-width));
+    margin: 0 auto;
+    padding: 92px 0 86px;
+}
+
+.page-hero h1 {
+    max-width: 700px;
+    margin: 0;
+    color: var(--color-black);
+    font-size: clamp(44px, 4.8vw, 72px);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+.page-hero p:last-child {
+    max-width: 620px;
+    margin: 30px 0 0;
+    color: #2d2d2d;
+    font-size: 24px;
+    line-height: 1.42;
+}
+
+.content-section {
+    background: var(--color-white);
+}
+
+.section-inner {
+    width: min(100% - 64px, var(--content-width));
+    margin: 0 auto;
+    padding: 82px 0;
+}
+
+.logistics-section {
+    border-top: 1px solid var(--color-border);
+}
+
+.section-heading {
+    max-width: 760px;
+}
+
+.section-kicker,
+.coming-soon {
+    margin: 0 0 14px;
+    color: var(--color-red);
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0;
+}
+
+.coming-soon {
+    margin-top: -4px;
+    margin-bottom: 18px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.section-heading h2 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: clamp(34px, 3.3vw, 54px);
+    line-height: 1.03;
+    font-weight: 800;
+}
+
+.section-heading p {
+    margin: 22px 0 0;
+    color: #333333;
+    font-size: 19px;
+    line-height: 1.55;
+}
+
+.steps-grid,
+.feature-grid {
+    display: grid;
+    gap: 18px;
+    margin-top: 44px;
+}
+
+.steps-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.feature-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.step-card,
+.feature-card {
+    border: 1px solid var(--color-border);
+    padding: 28px;
+    background: var(--color-white);
+}
+
+.step-card span {
+    display: block;
+    margin-bottom: 28px;
+    color: var(--color-red);
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.step-card h3,
+.feature-card h3 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 20px;
+    line-height: 1.2;
+    font-weight: 800;
+}
+
+.step-card p,
+.feature-card p {
+    margin: 14px 0 0;
+    color: var(--color-muted);
+    font-size: 16px;
+    line-height: 1.55;
+}
+
+.section-note {
+    max-width: 780px;
+    margin: 30px 0 0;
+    color: #7a7a7a;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.cta-section {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-white);
+}
+
+.cta-inner {
+    width: min(100% - 64px, var(--content-width));
+    margin: 0 auto;
+    padding: 78px 0 86px;
+}
+
+.cta-inner h2 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: clamp(36px, 4vw, 64px);
+    line-height: 1;
+    font-weight: 800;
+}
+
+.cta-inner p {
+    max-width: 620px;
+    margin: 22px 0 30px;
+    color: #333333;
+    font-size: 20px;
+    line-height: 1.5;
+}
+
 @media (max-width: 1040px) {
     .header-inner {
         width: min(100% - 40px, var(--content-width));
@@ -396,6 +556,21 @@ a {
     .copyright {
         width: min(100% - 40px, var(--content-width));
     }
+
+    .page-hero-inner,
+    .section-inner,
+    .cta-inner {
+        width: min(100% - 40px, var(--content-width));
+    }
+
+    .page-hero-inner {
+        padding: 72px 0 68px;
+    }
+
+    .steps-grid,
+    .feature-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 640px) {
@@ -463,5 +638,39 @@ a {
     .footer-inner {
         grid-template-columns: 1fr;
         padding: 46px 0 34px;
+    }
+
+    .page-hero-inner,
+    .section-inner,
+    .cta-inner {
+        width: min(100% - 28px, var(--content-width));
+    }
+
+    .page-hero-inner {
+        padding: 54px 0 52px;
+    }
+
+    .page-hero h1 {
+        font-size: clamp(36px, 11vw, 52px);
+    }
+
+    .page-hero p:last-child {
+        font-size: 19px;
+    }
+
+    .section-inner,
+    .cta-inner {
+        padding: 54px 0;
+    }
+
+    .steps-grid,
+    .feature-grid {
+        grid-template-columns: 1fr;
+        margin-top: 32px;
+    }
+
+    .step-card,
+    .feature-card {
+        padding: 24px;
     }
 }
