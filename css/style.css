@@ -561,6 +561,63 @@ a {
     color: var(--color-red);
 }
 
+.partner-card {
+    max-width: 960px;
+    margin-top: 44px;
+    border: 1px solid var(--color-border);
+    display: grid;
+    grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+    background: var(--color-white);
+}
+
+.partner-logo-wrap {
+    padding: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fbfbfb;
+}
+
+.partner-logo-wrap img {
+    width: 100%;
+    max-width: 230px;
+    height: auto;
+    object-fit: contain;
+}
+
+.partner-content {
+    padding: 34px;
+}
+
+.partner-content h3 {
+    margin: 0;
+    color: var(--color-black);
+    font-size: 24px;
+    line-height: 1.15;
+    font-weight: 800;
+}
+
+.partner-content p {
+    max-width: 620px;
+    margin: 18px 0 0;
+    color: #333333;
+    font-size: 16px;
+    line-height: 1.62;
+}
+
+.partner-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 18px;
+    margin-top: 24px;
+}
+
+.partner-links a {
+    color: var(--color-red);
+    font-size: 13px;
+    font-weight: 900;
+}
+
 .event-logistics-section {
     border-bottom: 1px solid var(--color-border);
 }
@@ -1301,6 +1358,16 @@ a {
     .profile-card,
     .contact-card {
         padding: 24px;
+    }
+
+    .partner-card {
+        grid-template-columns: 1fr;
+        margin-top: 32px;
+    }
+
+    .partner-logo-wrap,
+    .partner-content {
+        padding: 26px;
     }
 
     .catalog-inner {
