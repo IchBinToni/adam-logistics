@@ -42,7 +42,7 @@
                 <h1 id="page-title">VERLEIH</h1>
                 <p>
                     Unser Sortiment bietet die Grundlage f&uuml;r saubere, hochwertige und zuverl&auml;ssige Eventausstattung.<br>
-                    W&auml;hlen Sie sp&auml;ter die passenden Artikel aus und senden Sie bequem eine unverbindliche Anfrage.
+                    W&auml;hlen Sie passende Artikel aus und senden Sie bequem eine unverbindliche Anfrage.
                 </p>
             </div>
         </section>
@@ -593,10 +593,64 @@
 
         <section class="content-section about-separated" aria-labelledby="request-cart-title">
             <div class="section-inner about-section-inner">
-                <div class="catalog-note">
+                <div class="catalog-note request-heading">
                     <p class="section-kicker">ANFRAGE</p>
-                    <h2 id="request-cart-title">Anfragekorb folgt</h2>
-                    <p>Sp&auml;ter k&ouml;nnen Artikel direkt zur Anfrage hinzugef&uuml;gt werden. Nach Auswahl von Datum, Ort und Mengen wird die Anfrage an ADAM Logistics &uuml;bermittelt.</p>
+                    <h2 id="request-cart-title">Anfragekorb</h2>
+                    <p>Pr&uuml;fen Sie Ihre Auswahl und senden Sie eine unverbindliche Anfrage mit Eventdatum und Kontaktdaten.</p>
+                </div>
+
+                <div class="request-layout">
+                    <div class="request-cart" aria-live="polite">
+                        <div class="request-cart-header">
+                            <h3>Ihre Auswahl</h3>
+                            <button class="cart-clear" type="button" data-cart-clear>Leeren</button>
+                        </div>
+                        <div class="cart-empty-message" data-cart-empty>
+                            Noch keine Artikel im Anfragekorb.
+                        </div>
+                        <div class="cart-items" data-cart-items></div>
+                        <div class="cart-summary" data-cart-summary hidden>
+                            <span>Gesch&auml;tzte Summe netto</span>
+                            <strong data-cart-total>0,00 &euro;</strong>
+                        </div>
+                        <p class="request-note">Die Menge bezieht sich auf Verpackungseinheiten. Alle Preise netto zzgl. MwSt. und vorbehaltlich Verf&uuml;gbarkeit, Reinigung, Logistik und finaler Abstimmung.</p>
+                    </div>
+
+                    <form class="request-form" name="rental-request" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-request-form>
+                        <input type="hidden" name="form-name" value="rental-request">
+                        <input type="hidden" name="subject" value="Neue Verleih-Anfrage von adam-logistics.de">
+                        <input type="hidden" name="request_items" data-request-items>
+                        <p class="hidden-field">
+                            <label>Nicht ausf&uuml;llen: <input name="bot-field"></label>
+                        </p>
+
+                        <div class="form-grid">
+                            <label>
+                                Name / Firma
+                                <input type="text" name="name" autocomplete="name" required>
+                            </label>
+                            <label>
+                                E-Mail
+                                <input type="email" name="email" autocomplete="email" required>
+                            </label>
+                            <label>
+                                Telefon
+                                <input type="tel" name="phone" autocomplete="tel">
+                            </label>
+                            <label>
+                                Eventdatum
+                                <input type="date" name="event_date" required>
+                            </label>
+                        </div>
+
+                        <label>
+                            Nachricht
+                            <textarea name="message" rows="4" placeholder="G&auml;stezahl, Art der Veranstaltung oder besondere Hinweise"></textarea>
+                        </label>
+
+                        <button class="btn btn-primary request-submit" type="submit">ANFRAGE SENDEN</button>
+                        <p class="form-status" data-form-status role="status"></p>
+                    </form>
                 </div>
             </div>
         </section>

@@ -50,3 +50,213 @@ document.querySelectorAll(".nav-toggle").forEach((toggle) => {
         }
     });
 });
+
+const rentalRequestForm = document.querySelector("[data-request-form]");
+
+if (rentalRequestForm) {
+    const cartItemsElement = document.querySelector("[data-cart-items]");
+    const cartEmptyElement = document.querySelector("[data-cart-empty]");
+    const cartSummaryElement = document.querySelector("[data-cart-summary]");
+    const cartTotalElement = document.querySelector("[data-cart-total]");
+    const requestItemsInput = document.querySelector("[data-request-items]");
+    const formStatusElement = document.querySelector("[data-form-status]");
+    const clearCartButton = document.querySelector("[data-cart-clear]");
+    const cart = new Map();
+    const currencyFormatter = new Intl.NumberFormat("de-DE", {
+        style: "currency",
+        currency: "EUR",
+    });
+
+    const parsePrice = (value) => Number(value.replace(/[^\d,]/g, "").replace(",", ".")) || 0;
+    const parsePackageSize = (value) => Number(value.replace(/\D/g, "")) || 1;
+
+    const productFromCard = (card) => {
+        const rows = [...card.querySelectorAll(".product-info > dl > div")];
+        const getValue = (label) => {
+            const row = rows.find((item) => item.querySelector("dt")?.textContent.trim() === label);
+            return row?.querySelector("dd")?.textContent.trim() || "";
+        };
+
+        return {
+            id: card.querySelector(".product-number")?.textContent.trim() || "",
+            name: card.querySelector("h4")?.textContent.trim() || "",
+            price: parsePrice(getValue("Preis")),
+            unit: getValue("VPE"),
+            packageSize: parsePackageSize(getValue("VPE")),
+        };
+    };
+
+    const updateCart = () => {
+        const items = [...cart.values()].filter((item) => item.quantity > 0);
+        cartItemsElement.innerHTML = "";
+
+        items.forEach((item) => {
+            const row = document.createElement("div");
+            row.className = "cart-item";
+            row.innerHTML = `
+                <div>
+                    <strong>${item.name}</strong>
+                    <span>${item.id} · ${currencyFormatter.format(item.price)} netto/Stk. · ${item.quantity} VPE x ${item.packageSize} Stk.</span>
+                </div>
+                <label>
+                    VPE
+                    <input type="number" min="0" step="1" value="${item.quantity}" data-cart-quantity="${item.id}">
+                </label>
+                <button type="button" data-cart-remove="${item.id}" aria-label="${item.name} entfernen">Entfernen</button>
+            `;
+            cartItemsElement.append(row);
+        });
+
+        const total = items.reduce((sum, item) => sum + item.price * item.quantity * item.packageSize, 0);
+        cartEmptyElement.hidden = items.length > 0;
+        cartSummaryElement.hidden = items.length === 0;
+        cartTotalElement.textContent = currencyFormatter.format(total);
+        requestItemsInput.value = items.map((item) => (
+            `${item.quantity} VPE x ${item.packageSize} Stk. ${item.name} (${item.id}), ${currencyFormatter.format(item.price)} netto/Stk., Summe ${currencyFormatter.format(item.price * item.quantity * item.packageSize)}`
+        )).join("\n");
+    };
+
+    const addProductControls = (container, product, variantClass = "", beforeElement = null) => {
+        if (!product.id || !product.name) {
+            return;
+        }
+
+        const controls = document.createElement("div");
+        controls.className = `product-request${variantClass ? ` ${variantClass}` : ""}`;
+        controls.innerHTML = `
+            <label>
+                VPE
+                <input type="number" min="0" step="1" value="0" inputmode="numeric" data-product-quantity>
+            </label>
+            <button type="button" data-add-product>Hinzufügen</button>
+        `;
+        if (beforeElement) {
+            container.insertBefore(controls, beforeElement);
+        } else {
+            container.append(controls);
+        }
+
+        controls.querySelector("[data-add-product]").addEventListener("click", () => {
+            const quantityInput = controls.querySelector("[data-product-quantity]");
+            const quantity = Math.max(0, Number(quantityInput.value) || 0);
+
+            if (quantity === 0) {
+                formStatusElement.textContent = "Bitte zuerst mindestens 1 VPE eintragen.";
+                return;
+            }
+
+            const current = cart.get(product.id);
+            cart.set(product.id, {
+                ...product,
+                quantity: (current?.quantity || 0) + quantity,
+            });
+            quantityInput.value = "0";
+            formStatusElement.textContent = `${product.name} wurde zum Anfragekorb hinzugefügt.`;
+            updateCart();
+        });
+    };
+
+    const addonFromElement = (addon) => {
+        const rows = [...addon.querySelectorAll("dl > div")];
+        const getValue = (label) => {
+            const row = rows.find((item) => item.querySelector("dt")?.textContent.trim() === label);
+            return row?.querySelector("dd")?.textContent.trim() || "";
+        };
+        const rawName = addon.querySelector("p")?.textContent.trim() || "";
+        const name = rawName.replace(/^Passend dazu:\s*/i, "").replace(/\s+optional$/i, "");
+
+        return {
+            id: getValue("Artikelnummer"),
+            name,
+            price: parsePrice(getValue("Preis")),
+            unit: getValue("VPE"),
+            packageSize: parsePackageSize(getValue("VPE")),
+        };
+    };
+
+    document.querySelectorAll(".product-card").forEach((card) => {
+        const productInfo = card.querySelector(".product-info");
+
+        if (!productInfo) {
+            return;
+        }
+
+        addProductControls(productInfo, productFromCard(card), "", productInfo.querySelector(".product-addon"));
+
+        productInfo.querySelectorAll(".product-addon").forEach((addon) => {
+            addProductControls(addon, addonFromElement(addon), "product-addon-request");
+        });
+    });
+
+    cartItemsElement.addEventListener("input", (event) => {
+        const input = event.target.closest("[data-cart-quantity]");
+
+        if (!input) {
+            return;
+        }
+
+        const item = cart.get(input.dataset.cartQuantity);
+        const quantity = Math.max(0, Number(input.value) || 0);
+
+        if (item) {
+            item.quantity = quantity;
+            if (quantity === 0) {
+                cart.delete(item.id);
+            }
+            updateCart();
+        }
+    });
+
+    cartItemsElement.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-cart-remove]");
+
+        if (!button) {
+            return;
+        }
+
+        cart.delete(button.dataset.cartRemove);
+        updateCart();
+    });
+
+    clearCartButton.addEventListener("click", () => {
+        cart.clear();
+        updateCart();
+    });
+
+    rentalRequestForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        if (!requestItemsInput.value.trim()) {
+            formStatusElement.textContent = "Bitte fügen Sie mindestens einen Artikel zum Anfragekorb hinzu.";
+            return;
+        }
+
+        const submitButton = rentalRequestForm.querySelector("[type='submit']");
+        const formData = new FormData(rentalRequestForm);
+        submitButton.disabled = true;
+        formStatusElement.textContent = "Anfrage wird gesendet...";
+
+        try {
+            const response = await fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString(),
+            });
+
+            if (!response.ok) {
+                throw new Error("Form submission failed");
+            }
+
+            rentalRequestForm.reset();
+            cart.clear();
+            updateCart();
+            formStatusElement.textContent = "Vielen Dank. Ihre Anfrage wurde gesendet.";
+        } catch (error) {
+            formStatusElement.textContent = "Die Anfrage konnte nicht gesendet werden. Bitte schreiben Sie uns direkt an info@adam-logistics.de.";
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+
+    updateCart();
+}
