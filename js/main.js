@@ -61,7 +61,9 @@ if (rentalRequestForm) {
     const requestItemsInput = document.querySelector("[data-request-items]");
     const formStatusElement = document.querySelector("[data-form-status]");
     const clearCartButton = document.querySelector("[data-cart-clear]");
+    const floatingCartCountElement = document.querySelector("[data-floating-cart-count]");
     const cart = new Map();
+    const cartStorageKey = "adam-rental-request-cart";
     const currencyFormatter = new Intl.NumberFormat("de-DE", {
         style: "currency",
         currency: "EUR",
@@ -91,15 +93,19 @@ if (rentalRequestForm) {
         cartItemsElement.innerHTML = "";
 
         items.forEach((item) => {
+            const packageCount = Math.ceil(item.quantity / item.packageSize);
+            const billablePieces = packageCount * item.packageSize;
             const row = document.createElement("div");
             row.className = "cart-item";
             row.innerHTML = `
                 <div>
                     <strong>${item.name}</strong>
-                    <span>${item.id} · ${currencyFormatter.format(item.price)} netto/Stk. · ${item.quantity} VPE x ${item.packageSize} Stk.</span>
+                    <span>${item.id} · ${currencyFormatter.format(item.price)} netto/Stk.</span>
+                    <span class="cart-item-requested">Gewünscht: ${item.quantity} Stk.</span>
+                    <span class="cart-item-billed">Berechnet: ${packageCount} VPE = ${billablePieces} Stk.</span>
                 </div>
                 <label>
-                    VPE
+                    Wunschmenge
                     <input type="number" min="0" step="1" value="${item.quantity}" data-cart-quantity="${item.id}">
                 </label>
                 <button type="button" data-cart-remove="${item.id}" aria-label="${item.name} entfernen">Entfernen</button>
@@ -107,13 +113,37 @@ if (rentalRequestForm) {
             cartItemsElement.append(row);
         });
 
-        const total = items.reduce((sum, item) => sum + item.price * item.quantity * item.packageSize, 0);
+        const total = items.reduce((sum, item) => {
+            const packageCount = Math.ceil(item.quantity / item.packageSize);
+            return sum + item.price * packageCount * item.packageSize;
+        }, 0);
         cartEmptyElement.hidden = items.length > 0;
         cartSummaryElement.hidden = items.length === 0;
         cartTotalElement.textContent = currencyFormatter.format(total);
+        if (floatingCartCountElement) {
+            floatingCartCountElement.textContent = String(items.length);
+        }
         requestItemsInput.value = items.map((item) => (
-            `${item.quantity} VPE x ${item.packageSize} Stk. ${item.name} (${item.id}), ${currencyFormatter.format(item.price)} netto/Stk., Summe ${currencyFormatter.format(item.price * item.quantity * item.packageSize)}`
+            `${item.quantity} Stk. ${item.name} (${item.id}), VPE ${item.packageSize}, aufgerundet ${Math.ceil(item.quantity / item.packageSize)} VPE / ${Math.ceil(item.quantity / item.packageSize) * item.packageSize} Stk., ${currencyFormatter.format(item.price)} netto/Stk., Summe ${currencyFormatter.format(item.price * Math.ceil(item.quantity / item.packageSize) * item.packageSize)}`
         )).join("\n");
+
+        localStorage.setItem(cartStorageKey, JSON.stringify(items));
+    };
+
+    const restoreCart = () => {
+        try {
+            const savedItems = JSON.parse(localStorage.getItem(cartStorageKey) || "[]");
+
+            if (Array.isArray(savedItems)) {
+                savedItems.forEach((item) => {
+                    if (item.id && item.quantity > 0) {
+                        cart.set(item.id, item);
+                    }
+                });
+            }
+        } catch (error) {
+            localStorage.removeItem(cartStorageKey);
+        }
     };
 
     const addProductControls = (container, product, variantClass = "", beforeElement = null) => {
@@ -125,7 +155,7 @@ if (rentalRequestForm) {
         controls.className = `product-request${variantClass ? ` ${variantClass}` : ""}`;
         controls.innerHTML = `
             <label>
-                VPE
+                Stückzahl
                 <input type="number" min="0" step="1" value="0" inputmode="numeric" data-product-quantity>
             </label>
             <button type="button" data-add-product>Hinzufügen</button>
@@ -141,7 +171,7 @@ if (rentalRequestForm) {
             const quantity = Math.max(0, Number(quantityInput.value) || 0);
 
             if (quantity === 0) {
-                formStatusElement.textContent = "Bitte zuerst mindestens 1 VPE eintragen.";
+                formStatusElement.textContent = "Bitte zuerst eine Stückzahl größer 0 eintragen.";
                 return;
             }
 
@@ -151,7 +181,7 @@ if (rentalRequestForm) {
                 quantity: (current?.quantity || 0) + quantity,
             });
             quantityInput.value = "0";
-            formStatusElement.textContent = `${product.name} wurde zum Anfragekorb hinzugefügt.`;
+            formStatusElement.textContent = "";
             updateCart();
         });
     };
@@ -249,6 +279,7 @@ if (rentalRequestForm) {
 
             rentalRequestForm.reset();
             cart.clear();
+            localStorage.removeItem(cartStorageKey);
             updateCart();
             formStatusElement.textContent = "Vielen Dank. Ihre Anfrage wurde gesendet.";
         } catch (error) {
@@ -258,5 +289,6 @@ if (rentalRequestForm) {
         }
     });
 
+    restoreCart();
     updateCart();
 }

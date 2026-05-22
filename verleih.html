@@ -610,10 +610,10 @@
                         </div>
                         <div class="cart-items" data-cart-items></div>
                         <div class="cart-summary" data-cart-summary hidden>
-                            <span>Gesch&auml;tzte Summe netto</span>
+                            <span>Gesch&auml;tzte Summe netto nach vollen VPE</span>
                             <strong data-cart-total>0,00 &euro;</strong>
                         </div>
-                        <p class="request-note">Die Menge bezieht sich auf Verpackungseinheiten. Alle Preise netto zzgl. MwSt. und vorbehaltlich Verf&uuml;gbarkeit, Reinigung, Logistik und finaler Abstimmung.</p>
+                        <p class="request-note">Geben Sie die gew&uuml;nschte St&uuml;ckzahl ein. Im Anfragekorb wird automatisch auf volle VPE/Racks aufgerundet. Alle Preise netto zzgl. MwSt. und vorbehaltlich Verf&uuml;gbarkeit, Reinigung, Logistik und finaler Abstimmung.</p>
                     </div>
 
                     <form class="request-form" name="rental-request" method="POST" data-netlify="true" netlify-honeypot="bot-field" data-request-form>
@@ -655,6 +655,11 @@
             </div>
         </section>
     </main>
+
+    <a class="floating-cart-link" href="#request-cart-title" aria-label="Zum Anfragekorb">
+        <span>Anfragekorb</span>
+        <strong data-floating-cart-count>0</strong>
+    </a>
 
     <footer class="site-footer">
         <div class="footer-inner">

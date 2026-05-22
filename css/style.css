@@ -829,9 +829,10 @@ a {
     padding-top: 12px;
     border-top: 1px solid var(--color-border);
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: 62px 90px;
     align-items: end;
     gap: 8px;
+    justify-content: start;
 }
 
 .product-request label,
@@ -860,6 +861,10 @@ a {
     font-size: 14px;
 }
 
+.product-request input {
+    width: 62px;
+}
+
 .product-request button,
 .cart-clear,
 .cart-item button {
@@ -876,6 +881,13 @@ a {
     transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
 }
 
+.product-request button {
+    width: 90px;
+    padding-right: 7px;
+    padding-left: 7px;
+    font-size: 10.5px;
+}
+
 .product-request button:hover,
 .cart-clear:hover,
 .cart-item button:hover {
@@ -886,7 +898,7 @@ a {
 .product-addon-request {
     margin-top: 10px;
     padding-top: 10px;
-    grid-template-columns: 58px minmax(0, 1fr);
+    grid-template-columns: 52px 84px;
     gap: 7px;
 }
 
@@ -895,15 +907,17 @@ a {
 }
 
 .product-addon-request input {
+    width: 52px;
     min-height: 36px;
-    padding: 8px;
+    padding: 7px;
     font-size: 13px;
 }
 
 .product-addon-request button {
+    width: 84px;
     min-height: 36px;
-    padding: 8px 9px;
-    font-size: 10px;
+    padding: 7px 6px;
+    font-size: 9.8px;
 }
 
 .catalog-empty {
@@ -1103,6 +1117,16 @@ a {
     line-height: 1.35;
 }
 
+.cart-item .cart-item-billed {
+    width: fit-content;
+    margin-top: 8px;
+    padding: 5px 7px;
+    border: 1px solid rgba(201, 0, 0, 0.22);
+    color: var(--color-red);
+    background: #fff7f7;
+    font-weight: 900;
+}
+
 .cart-summary {
     margin-top: 22px;
     padding-top: 18px;
@@ -1166,12 +1190,46 @@ a {
 }
 
 .form-status {
-    min-height: 22px;
     margin: 0;
     color: var(--color-red);
     font-size: 14px;
     line-height: 1.45;
     font-weight: 800;
+}
+
+.form-status:empty {
+    display: none;
+}
+
+.floating-cart-link {
+    position: fixed;
+    left: 18px;
+    bottom: 18px;
+    z-index: 40;
+    min-height: 48px;
+    padding: 10px 12px 10px 16px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-white);
+    background: var(--color-red);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 900;
+}
+
+.floating-cart-link strong {
+    min-width: 26px;
+    min-height: 26px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-red);
+    background: var(--color-white);
+    font-size: 12px;
 }
 
 @media (max-width: 1040px) {
