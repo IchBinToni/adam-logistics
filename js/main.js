@@ -71,6 +71,23 @@ if (rentalRequestForm) {
 
     const parsePrice = (value) => Number(value.replace(/[^\d,]/g, "").replace(",", ".")) || 0;
     const parsePackageSize = (value) => Number(value.replace(/\D/g, "")) || 1;
+    const getCartCalculation = (item) => {
+        const packageCount = Math.ceil(item.quantity / item.packageSize);
+        const billablePieces = packageCount * item.packageSize;
+        const lineTotal = item.price * billablePieces;
+
+        return { packageCount, billablePieces, lineTotal };
+    };
+    const showFormStatus = (message, type = "error", shouldScroll = false) => {
+        formStatusElement.textContent = message;
+        formStatusElement.dataset.status = type;
+
+        if (shouldScroll) {
+            requestAnimationFrame(() => {
+                formStatusElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            });
+        }
+    };
 
     const productFromCard = (card) => {
         const rows = [...card.querySelectorAll(".product-info > dl > div")];
@@ -93,8 +110,7 @@ if (rentalRequestForm) {
         cartItemsElement.innerHTML = "";
 
         items.forEach((item) => {
-            const packageCount = Math.ceil(item.quantity / item.packageSize);
-            const billablePieces = packageCount * item.packageSize;
+            const { packageCount, billablePieces, lineTotal } = getCartCalculation(item);
             const row = document.createElement("div");
             row.className = "cart-item";
             row.innerHTML = `
@@ -103,6 +119,7 @@ if (rentalRequestForm) {
                     <span>${item.id} · ${currencyFormatter.format(item.price)} netto/Stk.</span>
                     <span class="cart-item-requested">Gewünscht: ${item.quantity} Stk.</span>
                     <span class="cart-item-billed">Berechnet: ${packageCount} VPE = ${billablePieces} Stk.</span>
+                    <span class="cart-item-total">${currencyFormatter.format(item.price)} * ${billablePieces} Stk. = ${currencyFormatter.format(lineTotal)}</span>
                 </div>
                 <label>
                     Wunschmenge
@@ -114,8 +131,8 @@ if (rentalRequestForm) {
         });
 
         const total = items.reduce((sum, item) => {
-            const packageCount = Math.ceil(item.quantity / item.packageSize);
-            return sum + item.price * packageCount * item.packageSize;
+            const { lineTotal } = getCartCalculation(item);
+            return sum + lineTotal;
         }, 0);
         cartEmptyElement.hidden = items.length > 0;
         cartSummaryElement.hidden = items.length === 0;
@@ -123,9 +140,15 @@ if (rentalRequestForm) {
         if (floatingCartCountElement) {
             floatingCartCountElement.textContent = String(items.length);
         }
-        requestItemsInput.value = items.map((item) => (
-            `${item.quantity} Stk. ${item.name} (${item.id}), VPE ${item.packageSize}, aufgerundet ${Math.ceil(item.quantity / item.packageSize)} VPE / ${Math.ceil(item.quantity / item.packageSize) * item.packageSize} Stk., ${currencyFormatter.format(item.price)} netto/Stk., Summe ${currencyFormatter.format(item.price * Math.ceil(item.quantity / item.packageSize) * item.packageSize)}`
-        )).join("\n");
+        requestItemsInput.value = items.map((item) => {
+            const { packageCount, billablePieces, lineTotal } = getCartCalculation(item);
+
+            return [
+                `${item.name} / ${item.id} / ${packageCount} VPE / ${item.packageSize} Stk. je VPE / ${billablePieces} Stk.`,
+                `Gewuenscht: ${item.quantity} Stk.`,
+                `${currencyFormatter.format(item.price)} pro Teil * ${billablePieces} Teile = ${currencyFormatter.format(lineTotal)}`,
+            ].join("\n");
+        }).join("\n\n");
 
         localStorage.setItem(cartStorageKey, JSON.stringify(items));
     };
@@ -282,8 +305,10 @@ if (rentalRequestForm) {
             localStorage.removeItem(cartStorageKey);
             updateCart();
             formStatusElement.textContent = "Vielen Dank. Ihre Anfrage wurde gesendet.";
+            showFormStatus("Vielen Dank. Ihre Anfrage wurde gesendet.", "success", true);
         } catch (error) {
             formStatusElement.textContent = "Die Anfrage konnte nicht gesendet werden. Bitte schreiben Sie uns direkt an info@adam-logistics.de.";
+            showFormStatus("Die Anfrage konnte nicht gesendet werden. Bitte schreiben Sie uns direkt an info@adam-logistics.de.", "error", true);
         } finally {
             submitButton.disabled = false;
         }

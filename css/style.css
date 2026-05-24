@@ -1127,6 +1127,11 @@ a {
     font-weight: 900;
 }
 
+.cart-item .cart-item-total {
+    color: var(--color-black);
+    font-weight: 900;
+}
+
 .cart-summary {
     margin-top: 22px;
     padding-top: 18px;
@@ -1195,6 +1200,14 @@ a {
     font-size: 14px;
     line-height: 1.45;
     font-weight: 800;
+}
+
+.form-status[data-status="success"] {
+    color: #17633a;
+}
+
+.form-status[data-status="info"] {
+    color: var(--color-muted);
 }
 
 .form-status:empty {
