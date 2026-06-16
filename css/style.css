@@ -865,6 +865,10 @@ a {
     width: 62px;
 }
 
+.product-request label {
+    order: 1;
+}
+
 .product-request button,
 .cart-clear,
 .cart-item button {
@@ -882,10 +886,20 @@ a {
 }
 
 .product-request button {
+    order: 2;
     width: 90px;
     padding-right: 7px;
     padding-left: 7px;
     font-size: 10.5px;
+}
+
+.product-request-hint {
+    grid-column: 1 / -1;
+    order: 3;
+    color: var(--color-muted);
+    font-size: 10.5px;
+    line-height: 1.35;
+    font-weight: 800;
 }
 
 .product-request button:hover,

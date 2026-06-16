@@ -63,6 +63,7 @@ if (rentalRequestForm) {
     const clearCartButton = document.querySelector("[data-cart-clear]");
     const floatingCartCountElement = document.querySelector("[data-floating-cart-count]");
     const cart = new Map();
+    const products = new Map();
     const cartStorageKey = "adam-rental-request-cart";
     const currencyFormatter = new Intl.NumberFormat("de-DE", {
         style: "currency",
@@ -71,6 +72,35 @@ if (rentalRequestForm) {
 
     const parsePrice = (value) => Number(value.replace(/[^\d,]/g, "").replace(",", ".")) || 0;
     const parsePackageSize = (value) => Number(value.replace(/\D/g, "")) || 1;
+    const getOrderRules = (id) => {
+        if (id.startsWith("BES-")) {
+            return { minimumQuantity: 20, quantityStep: 5 };
+        }
+
+        if (/^POR-000[5-9]$/.test(id)) {
+            return { minimumQuantity: 20, quantityStep: 10 };
+        }
+
+        return { minimumQuantity: 0, quantityStep: 1 };
+    };
+    const normalizeQuantity = (quantity, item) => {
+        const minimum = item.minimumQuantity || 0;
+        const step = item.quantityStep || 1;
+
+        if (quantity <= 0) {
+            return 0;
+        }
+
+        if (!minimum || step <= 1) {
+            return quantity;
+        }
+
+        if (quantity <= minimum) {
+            return minimum;
+        }
+
+        return minimum + Math.ceil((quantity - minimum) / step) * step;
+    };
     const getCartCalculation = (item) => {
         const packageCount = Math.ceil(item.quantity / item.packageSize);
         const billablePieces = packageCount * item.packageSize;
@@ -96,8 +126,11 @@ if (rentalRequestForm) {
             return row?.querySelector("dd")?.textContent.trim() || "";
         };
 
+        const id = card.querySelector(".product-number")?.textContent.trim() || "";
+
         return {
-            id: card.querySelector(".product-number")?.textContent.trim() || "",
+            ...getOrderRules(id),
+            id,
             name: card.querySelector("h4")?.textContent.trim() || "",
             price: parsePrice(getValue("Preis")),
             unit: getValue("VPE"),
@@ -123,7 +156,7 @@ if (rentalRequestForm) {
                 </div>
                 <label>
                     Wunschmenge
-                    <input type="number" min="0" step="1" value="${item.quantity}" data-cart-quantity="${item.id}">
+                    <input type="number" min="${item.minimumQuantity || 0}" step="${item.quantityStep || 1}" value="${item.quantity}" data-cart-quantity="${item.id}">
                 </label>
                 <button type="button" data-cart-remove="${item.id}" aria-label="${item.name} entfernen">Entfernen</button>
             `;
@@ -160,7 +193,12 @@ if (rentalRequestForm) {
             if (Array.isArray(savedItems)) {
                 savedItems.forEach((item) => {
                     if (item.id && item.quantity > 0) {
-                        cart.set(item.id, item);
+                        const currentProduct = products.get(item.id);
+                        cart.set(item.id, {
+                            ...item,
+                            ...currentProduct,
+                            quantity: normalizeQuantity(item.quantity, currentProduct || item),
+                        });
                     }
                 });
             }
@@ -173,14 +211,16 @@ if (rentalRequestForm) {
         if (!product.id || !product.name) {
             return;
         }
+        products.set(product.id, product);
 
         const controls = document.createElement("div");
         controls.className = `product-request${variantClass ? ` ${variantClass}` : ""}`;
         controls.innerHTML = `
             <label>
                 Stückzahl
-                <input type="number" min="0" step="1" value="0" inputmode="numeric" data-product-quantity>
+                <input type="number" min="0" step="${product.quantityStep || 1}" value="0" inputmode="numeric" data-product-quantity>
             </label>
+            ${product.minimumQuantity ? `<span class="product-request-hint">Mind. ${product.minimumQuantity} Stk., danach ${product.quantityStep}er-Schritte</span>` : ""}
             <button type="button" data-add-product>Hinzufügen</button>
         `;
         if (beforeElement) {
@@ -191,7 +231,7 @@ if (rentalRequestForm) {
 
         controls.querySelector("[data-add-product]").addEventListener("click", () => {
             const quantityInput = controls.querySelector("[data-product-quantity]");
-            const quantity = Math.max(0, Number(quantityInput.value) || 0);
+            const quantity = normalizeQuantity(Math.max(0, Number(quantityInput.value) || 0), product);
 
             if (quantity === 0) {
                 formStatusElement.textContent = "Bitte zuerst eine Stückzahl größer 0 eintragen.";
@@ -249,10 +289,11 @@ if (rentalRequestForm) {
         }
 
         const item = cart.get(input.dataset.cartQuantity);
-        const quantity = Math.max(0, Number(input.value) || 0);
+        const quantity = normalizeQuantity(Math.max(0, Number(input.value) || 0), item || {});
 
         if (item) {
             item.quantity = quantity;
+            input.value = quantity;
             if (quantity === 0) {
                 cart.delete(item.id);
             }
