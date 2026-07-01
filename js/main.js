@@ -77,7 +77,7 @@ if (rentalRequestForm) {
             return { minimumQuantity: 20, quantityStep: 5 };
         }
 
-        if (/^POR-000[5-9]$/.test(id)) {
+        if (/^POR-000[1-9]$/.test(id)) {
             return { minimumQuantity: 20, quantityStep: 10 };
         }
 
@@ -220,7 +220,7 @@ if (rentalRequestForm) {
                 Stückzahl
                 <input type="number" min="0" step="${product.quantityStep || 1}" value="0" inputmode="numeric" data-product-quantity>
             </label>
-            ${product.minimumQuantity ? `<span class="product-request-hint">Mind. ${product.minimumQuantity} Stk., danach ${product.quantityStep}er-Schritte</span>` : ""}
+            ${product.minimumQuantity ? `<span class="product-request-hint" data-minimum-hint hidden>Mind. ${product.minimumQuantity} Stk., danach ${product.quantityStep}er-Schritte</span>` : ""}
             <button type="button" data-add-product>Hinzufügen</button>
         `;
         if (beforeElement) {
@@ -231,10 +231,23 @@ if (rentalRequestForm) {
 
         controls.querySelector("[data-add-product]").addEventListener("click", () => {
             const quantityInput = controls.querySelector("[data-product-quantity]");
-            const quantity = normalizeQuantity(Math.max(0, Number(quantityInput.value) || 0), product);
+            const minimumHint = controls.querySelector("[data-minimum-hint]");
+            const rawQuantity = Math.max(0, Number(quantityInput.value) || 0);
+            const quantity = normalizeQuantity(rawQuantity, product);
 
-            if (quantity === 0) {
+            if (minimumHint) {
+                minimumHint.hidden = true;
+            }
+
+            if (rawQuantity === 0) {
                 formStatusElement.textContent = "Bitte zuerst eine Stückzahl größer 0 eintragen.";
+                return;
+            }
+
+            if (product.minimumQuantity && rawQuantity < product.minimumQuantity) {
+                if (minimumHint) {
+                    minimumHint.hidden = false;
+                }
                 return;
             }
 
@@ -258,8 +271,11 @@ if (rentalRequestForm) {
         const rawName = addon.querySelector("p")?.textContent.trim() || "";
         const name = rawName.replace(/^Passend dazu:\s*/i, "").replace(/\s+optional$/i, "");
 
+        const id = getValue("Artikelnummer");
+
         return {
-            id: getValue("Artikelnummer"),
+            ...getOrderRules(id),
+            id,
             name,
             price: parsePrice(getValue("Preis")),
             unit: getValue("VPE"),
