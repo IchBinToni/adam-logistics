@@ -624,29 +624,49 @@
                             <label>Nicht ausf&uuml;llen: <input name="bot-field"></label>
                         </p>
 
-                        <div class="form-grid">
-                            <label>
-                                Name / Firma
-                                <input type="text" name="name" autocomplete="name" required>
-                            </label>
-                            <label>
-                                E-Mail
-                                <input type="email" name="email" autocomplete="email" required>
-                            </label>
-                            <label>
-                                Telefon
-                                <input type="tel" name="phone" autocomplete="tel">
-                            </label>
-                            <label>
-                                Eventdatum
-                                <input type="date" name="event_date" required>
-                            </label>
+                        <div class="form-section">
+                            <h3>Kontaktdaten</h3>
+                            <div class="form-grid">
+                                <label>
+                                    Name / Firma
+                                    <input type="text" name="name" autocomplete="name" required>
+                                </label>
+                                <label>
+                                    E-Mail
+                                    <input type="email" name="email" autocomplete="email" required>
+                                </label>
+                                <label>
+                                    Telefon
+                                    <input type="tel" name="phone" autocomplete="tel">
+                                </label>
+                            </div>
                         </div>
 
-                        <label>
-                            Nachricht
-                            <textarea name="message" rows="4" placeholder="G&auml;stezahl, Art der Veranstaltung oder besondere Hinweise"></textarea>
-                        </label>
+                        <div class="form-section">
+                            <h3>Veranstaltungsdetails</h3>
+                            <div class="form-grid">
+                                <label>
+                                    Eventdatum
+                                    <input type="date" name="event_date" required>
+                                </label>
+                                <label>
+                                    Veranstaltungsort
+                                    <input type="text" name="event_location" autocomplete="organization">
+                                </label>
+                                <label class="form-wide">
+                                    Adresse
+                                    <input type="text" name="event_address" autocomplete="street-address">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>Zus&auml;tzliche Informationen</h3>
+                            <label>
+                                <span class="sr-only">Zus&auml;tzliche Informationen</span>
+                                <textarea name="message" rows="5" placeholder="G&auml;stezahl, Art der Veranstaltung, besondere Hinweise oder W&uuml;nsche"></textarea>
+                            </label>
+                        </div>
 
                         <button class="btn btn-primary request-submit" type="submit">ANFRAGE SENDEN</button>
                         <p class="form-status" data-form-status role="status"></p>
