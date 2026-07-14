@@ -204,7 +204,7 @@ a {
 }
 
 .hero-goal {
-    width: 760px;
+    width: 560px;
     max-width: calc(100vw - max(32px, calc((100vw - var(--content-width)) / 2)) - 40px);
     margin-top: 24px;
 }
