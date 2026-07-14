@@ -1241,13 +1241,6 @@ a {
     line-height: 1.55;
 }
 
-.request-note-strong {
-    padding-top: 14px;
-    border-top: 1px solid var(--color-border);
-    color: #3a3a3a;
-    font-weight: 800;
-}
-
 .request-form {
     padding: 26px;
     display: grid;
