@@ -304,28 +304,6 @@ a {
     line-height: 1.42;
 }
 
-.hero-goal {
-    width: 560px;
-    max-width: calc(100vw - max(32px, calc((100vw - var(--content-width)) / 2)) - 40px);
-    margin-top: 24px;
-}
-
-.hero-goal h2 {
-    margin: 0 0 10px;
-    color: var(--color-black);
-    font-size: 18px;
-    line-height: 1.2;
-    font-weight: 900;
-    text-transform: uppercase;
-}
-
-.hero-goal p {
-    margin: 10px 0 0;
-    color: #3a3a3a;
-    font-size: 16px;
-    line-height: 1.55;
-}
-
 .hero-actions {
     display: grid;
     gap: 13px;
