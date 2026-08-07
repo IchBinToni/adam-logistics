@@ -1,5 +1,5 @@
 const maintenancePassword = "ADAM";
-const maintenanceAccessKey = "adam-maintenance-access";
+const maintenanceAccessKey = "adam-maintenance-access-v2";
 
 if (localStorage.getItem(maintenanceAccessKey) !== maintenancePassword) {
     document.documentElement.classList.add("maintenance-active");
