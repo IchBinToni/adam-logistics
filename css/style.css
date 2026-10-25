@@ -195,7 +195,7 @@ a {
 }
 
 .hero-copy {
-    width: 760px;
+    width: 500px;
     max-width: calc(100vw - max(32px, calc((100vw - var(--content-width)) / 2)) - 40px);
     margin: 28px 0 0;
     color: #2d2d2d;
